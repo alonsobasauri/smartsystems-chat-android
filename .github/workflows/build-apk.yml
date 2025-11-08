@@ -1,0 +1,75 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace
+
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-debug
+        path: app/build/outputs/apk/debug/app-debug.apk
+        retention-days: 30
+
+    - name: Get version name
+      if: startsWith(github.ref, 'refs/tags/v')
+      id: version
+      run: |
+        VERSION_TAG=${GITHUB_REF#refs/tags/}
+        echo "VERSION_TAG=$VERSION_TAG" >> $GITHUB_OUTPUT
+        echo "VERSION_NAME=${VERSION_TAG#v}" >> $GITHUB_OUTPUT
+
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: app/build/outputs/apk/debug/app-debug.apk
+        body: |
+          ## SmartSystems Chat ${{ steps.version.outputs.VERSION_NAME }}
+
+          **Download the APK below and install it on your Android device.**
+
+          ### Features
+          - Full-screen WebView for chat.smartsystems.work
+          - Automatic offline detection
+          - Auto-update system
+          - Network monitoring
+          - Back button navigation
+
+          ### Installation
+          1. Download `app-debug.apk`
+          2. Enable "Install from Unknown Sources" on your device
+          3. Open the APK to install
+          4. Launch SmartSystems Chat
+
+          ### Auto-Update
+          The app will automatically check for new releases and prompt you to update.
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

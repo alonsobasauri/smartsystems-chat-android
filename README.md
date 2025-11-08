@@ -91,7 +91,28 @@ android-app/
 
 ## Building the App
 
-### 1. Open Project in Android Studio
+### Automated Builds (Recommended)
+
+The repository includes GitHub Actions that automatically build APKs:
+
+1. **On every push to main** - APK available as artifact
+2. **On version tags** - APK automatically attached to release
+
+To trigger a build:
+```bash
+git push origin main
+# Or create a release tag:
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+Download built APKs from:
+- **Artifacts**: https://github.com/alonsobasauri/smartsystems-chat-android/actions
+- **Releases**: https://github.com/alonsobasauri/smartsystems-chat-android/releases
+
+### Manual Build
+
+#### 1. Open Project in Android Studio
 
 ```bash
 cd /home/alonso/Documents/apo/android-app
@@ -103,12 +124,12 @@ Or from command line:
 studio /home/alonso/Documents/apo/android-app
 ```
 
-### 2. Sync Gradle
+#### 2. Sync Gradle
 
 Android Studio will automatically prompt to sync Gradle. If not:
 - Click **File > Sync Project with Gradle Files**
 
-### 3. Build Debug APK
+#### 3. Build Debug APK
 
 **From Android Studio:**
 - Click **Build > Build Bundle(s) / APK(s) > Build APK(s)**
@@ -119,6 +140,13 @@ Android Studio will automatically prompt to sync Gradle. If not:
 cd /home/alonso/Documents/apo/android-app
 ./gradlew assembleDebug
 ```
+
+**Prerequisites for manual build:**
+- Android SDK Platform 34
+- Build Tools 34.0.0
+- Java JDK 17+
+
+See [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md) for detailed setup.
 
 ### 4. Build Release APK (Signed)
 
