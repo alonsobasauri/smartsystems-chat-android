@@ -21,8 +21,8 @@ object WebViewConfig {
 
             // Cache settings for offline support
             cacheMode = WebSettings.LOAD_DEFAULT
-            @Suppress("DEPRECATION")
-            setAppCacheEnabled(true)
+            // Note: setAppCacheEnabled is deprecated and removed in API 33+
+            // PWA caching now handled by Service Workers
 
             // PWA support
             mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
