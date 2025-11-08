@@ -21,6 +21,7 @@ object WebViewConfig {
 
             // Cache settings for offline support
             cacheMode = WebSettings.LOAD_DEFAULT
+            @Suppress("DEPRECATION")
             setAppCacheEnabled(true)
 
             // PWA support
